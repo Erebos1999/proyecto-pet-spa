@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "276501101976",
+    "project_id": "cerverus-pet-spa",
+    "storage_bucket": "cerverus-pet-spa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276501101976:android:d8324cdd097bf1b3713fed",
+        "android_client_info": {
+          "package_name": "com.example.cerberus_pet_spa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276501101976-2h1vqlgl7rkqnc1tigjng79b3q6s45l2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cerberus_pet_spa",
+            "certificate_hash": "d2e02aebf9291c0afa851317c22d9921a5826523"
+          }
+        },
+        {
+          "client_id": "276501101976-3j86t1k9h2qef392eap7fdnsdqhm53k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHakzfvGw3L_jk7PGpGAXzn5I8l4hIKco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276501101976-3j86t1k9h2qef392eap7fdnsdqhm53k8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276501101976-8nt13rj8qq7nhpmp1dp54ucf039u45ri.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.petspa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276501101976:android:73ad973d992b468a713fed",
+        "android_client_info": {
+          "package_name": "com.mycompany.petspa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276501101976-mhrae6r2mma4s2pcmo2am4vqj4js9l2q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.petspa",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "276501101976-3j86t1k9h2qef392eap7fdnsdqhm53k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHakzfvGw3L_jk7PGpGAXzn5I8l4hIKco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276501101976-3j86t1k9h2qef392eap7fdnsdqhm53k8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276501101976-8nt13rj8qq7nhpmp1dp54ucf039u45ri.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.petspa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
