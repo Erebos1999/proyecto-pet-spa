@@ -6,8 +6,8 @@ import '../../../../core/widgets/logout_listener.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 
-class AdminHomeScreen extends StatelessWidget {
-  const AdminHomeScreen({super.key});
+class AdminDashboardScreen extends StatelessWidget {
+  const AdminDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

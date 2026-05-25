@@ -6,22 +6,26 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/logout_listener.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
-class ReceptionHomeScreen extends StatelessWidget {
-  const ReceptionHomeScreen({super.key});
+class CustomerDashboardScreen extends StatelessWidget {
+  const CustomerDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return LogoutListener(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Recepción'),
+          title: const Text('Cliente'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () async {
-                context.read<AuthBloc>().add(LogoutEvent());
+            Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () async {
+                    context.read<AuthBloc>().add(LogoutEvent());
 
-                context.go('/login');
+                    context.go('/login');
+                  },
+                );
               },
             ),
           ],
@@ -35,23 +39,19 @@ class ReceptionHomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.support_agent,
-                    size: 90,
-                    color: Color(0xff66c7d8),
-                  ),
+                  const Icon(Icons.pets, size: 90, color: Color(0xff66c7d8)),
 
                   const SizedBox(height: 20),
 
                   const Text(
-                    'Panel Recepción',
+                    'Bienvenido a Pet Spa',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 10),
 
                   const Text(
-                    'Administra clientes, reservas y atención.',
+                    'Agenda baños, peluquería y cuidado premium para tu mascota.',
                     textAlign: TextAlign.center,
                   ),
 
@@ -63,13 +63,13 @@ class ReceptionHomeScreen extends StatelessWidget {
                       child: Column(
                         children: const [
                           Icon(
-                            Icons.people,
+                            Icons.calendar_month,
                             size: 60,
                             color: Color(0xff66c7d8),
                           ),
                           SizedBox(height: 15),
                           Text(
-                            'Próximamente: Gestión de Clientes',
+                            'Próximamente: Reservas Online',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,

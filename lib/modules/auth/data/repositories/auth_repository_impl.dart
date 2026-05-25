@@ -48,13 +48,14 @@ class AuthRepositoryImpl implements AuthRepository {
       await result.user?.reload();
 
       final currentUser = FirebaseAuth.instance.currentUser!;
+      // VALIDACIÓN DESACTIVADA TEMPORALMENTE
 
       print('C. email verificado');
-      if (!currentUser.emailVerified) {
+      /*if (!currentUser.emailVerified) {
         await remoteDataSource.logout();
 
         throw Exception('Debes verificar tu correo');
-      }
+      }*/
 
       // obtener rol
       final userDoc = await firestoreDatasource.getUser(currentUser.uid);

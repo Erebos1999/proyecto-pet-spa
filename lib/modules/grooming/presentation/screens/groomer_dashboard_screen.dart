@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/logout_listener.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
-class GroomerHomeScreen extends StatelessWidget {
-  const GroomerHomeScreen({super.key});
+class GroomerDashboardScreen extends StatelessWidget {
+  const GroomerDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
