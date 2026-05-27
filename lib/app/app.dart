@@ -6,15 +6,18 @@ import '../config/router/app_router.dart';
 import '../modules/auth/data/datasource/auth_firestore_datasource.dart';
 import '../modules/auth/data/datasource/auth_remote_datasource.dart';
 import '../modules/auth/data/repositories/auth_repository_impl.dart';
-
 import '../modules/auth/presentation/bloc/auth_bloc.dart';
+
+import '../modules/pets/presentation/bloc/pet_bloc.dart';
+import '../modules/appointments/presentation/bloc/appointment_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authRepository = AuthRepositoryImpl(
+    final authRepository =
+        AuthRepositoryImpl(
       AuthRemoteDataSource(),
       AuthFirestoreDatasource(),
     );
@@ -22,13 +25,46 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => AuthBloc(authRepository),
+          create: (_) =>
+              AuthBloc(
+            authRepository,
+          ),
+        ),
+
+        BlocProvider(
+          create: (_) =>
+              PetBloc(),
+        ),
+
+        BlocProvider(
+          create: (_) =>
+              AppointmentBloc(),
         ),
       ],
 
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: appRouter,
+      child:
+          MaterialApp.router(
+        debugShowCheckedModeBanner:
+            false,
+        routerConfig:
+            appRouter,
+
+        theme: ThemeData(
+          primaryColor:
+              const Color(
+            0xff66c7d8,
+          ),
+
+          colorScheme:
+              ColorScheme.fromSeed(
+            seedColor:
+                const Color(
+              0xff66c7d8,
+            ),
+          ),
+
+          useMaterial3: true,
+        ),
       ),
     );
   }

@@ -59,12 +59,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
 
-              context.go('/login');
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (context.mounted) {
+                context.go('/login');
+              }
             });
           }
 

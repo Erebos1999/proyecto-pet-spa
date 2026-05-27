@@ -1,6 +1,10 @@
+import 'package:cerberus_pet_spa/modules/appointments/data/datasource/user_firestore_datasource.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
+import '../../../pets/data/datasource/pet_firestore_datasource.dart';
 import '../../domain/entities/appointment_entity.dart';
 import '../bloc/appointment_bloc.dart';
 
@@ -12,73 +16,85 @@ class CreateAppointmentScreen extends StatefulWidget {
       _CreateAppointmentScreenState();
 }
 
-class _CreateAppointmentScreenState
-    extends State<CreateAppointmentScreen> {
-  final petIdController = TextEditingController();
-  final ownerIdController = TextEditingController();
-  final groomerIdController = TextEditingController();
+class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
+  final petDatasource = PetFirestoreDatasource();
+
+  final groomerDatasource = UserFirestoreDatasource();
+
+  List<dynamic> pets = [];
+  List<dynamic> groomers = [];
+
+  String? selectedPetId;
+  String? selectedGroomerId;
 
   String selectedService = 'Baño';
   int duration = 60;
 
-  DateTime selectedDate =
-      DateTime.now().add(
-    const Duration(hours: 1),
-  );
+  late String ownerId;
+
+  DateTime selectedDate = DateTime.now().add(const Duration(hours: 1));
 
   @override
-  void dispose() {
-    petIdController.dispose();
-    ownerIdController.dispose();
-    groomerIdController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    ownerId = FirebaseAuth.instance.currentUser!.uid;
+
+    final userPets = await petDatasource.getPetsByOwner(ownerId);
+
+    final groomersList = await groomerDatasource.getGroomers();
+
+    setState(() {
+      pets = userPets;
+      groomers = groomersList;
+
+      if (pets.isNotEmpty) {
+        selectedPetId = pets.first.id;
+      }
+
+      if (groomers.isNotEmpty) {
+        selectedGroomerId = groomers.first['id'];
+      }
+    });
   }
 
   void createAppointment() {
+    if (selectedPetId == null || selectedGroomerId == null) {
+      return;
+    }
+
     final appointment = AppointmentEntity(
       id: '',
-      petId: petIdController.text.trim(),
-      ownerId: ownerIdController.text.trim(),
-      groomerId:
-          groomerIdController.text.trim(),
+      petId: selectedPetId!,
+      ownerId: ownerId,
+      groomerId: selectedGroomerId!,
       serviceName: selectedService,
       durationMinutes: duration,
       startTime: selectedDate,
-      endTime: selectedDate.add(
-        Duration(minutes: duration),
-      ),
+      endTime: selectedDate.add(Duration(minutes: duration)),
       status: 'pending',
       createdAt: DateTime.now(),
     );
 
-    context.read<AppointmentBloc>().add(
-          CreateAppointmentEvent(
-            appointment,
-          ),
-        );
+    context.read<AppointmentBloc>().add(CreateAppointmentEvent(appointment));
   }
 
   Future<void> pickDate() async {
-    final date =
-        await showDatePicker(
+    final date = await showDatePicker(
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime.now(),
-      lastDate:
-          DateTime.now().add(
-        const Duration(days: 365),
-      ),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (date == null) return;
 
-    final time =
-        await showTimePicker(
+    final time = await showTimePicker(
       context: context,
-      initialTime:
-          TimeOfDay.fromDateTime(
-        selectedDate,
-      ),
+      initialTime: TimeOfDay.fromDateTime(selectedDate),
     );
 
     if (time == null) return;
@@ -94,265 +110,91 @@ class _CreateAppointmentScreenState
     });
   }
 
-  Widget field(
-    TextEditingController c,
-    String label,
-  ) {
-    return Padding(
-      padding:
-          const EdgeInsets.only(
-        bottom: 20,
-      ),
-      child: TextField(
-        controller: c,
-        decoration:
-            InputDecoration(
-          labelText: label,
-          border:
-              OutlineInputBorder(
-            borderRadius:
-                BorderRadius.circular(
-              12,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
-  Widget build(
-      BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text(
-          'Nueva Cita',
-        ),
-      ),
-      body:
-          BlocListener<
-              AppointmentBloc,
-              AppointmentState>(
-        listener:
-            (context, state) {
-          if (state
-              is AppointmentCreated) {
-            ScaffoldMessenger.of(
-                    context)
-                .showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Cita creada correctamente',
-                ),
-              ),
-            );
-
-            Navigator.pop(
-                context);
-          }
-
-          if (state
-              is AppointmentError) {
-            ScaffoldMessenger.of(
-                    context)
-                .showSnackBar(
-              SnackBar(
-                content:
-                    Text(
-                  state.message,
-                ),
-              ),
-            );
+      appBar: AppBar(title: const Text('Nueva Cita')),
+      body: BlocListener<AppointmentBloc, AppointmentState>(
+        listener: (context, state) {
+          if (state is AppointmentCreated) {
+            Navigator.pop(context);
           }
         },
-        child: Center(
-          child:
-              ConstrainedBox(
-            constraints:
-                const BoxConstraints(
-              maxWidth:
-                  550,
-            ),
-            child:
-                Card(
-              margin:
-                  const EdgeInsets.all(
-                24,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: ListView(
+            children: [
+              DropdownButtonFormField(
+                value: selectedPetId,
+                decoration: const InputDecoration(labelText: 'Mascota'),
+                items: pets
+                    .map<DropdownMenuItem<String>>(
+                      (p) => DropdownMenuItem(value: p.id, child: Text(p.name)),
+                    )
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    selectedPetId = v;
+                  });
+                },
               ),
-              child:
-                  Padding(
-                padding:
-                    const EdgeInsets.all(
-                  30,
-                ),
-                child:
-                    SingleChildScrollView(
-                  child:
-                      Column(
-                    children: [
-                      const Icon(
-                        Icons
-                            .calendar_month,
-                        size:
-                            70,
-                        color: Color(
-                            0xff66c7d8),
-                      ),
-                      const SizedBox(
-                          height:
-                              20),
-                      const Text(
-                        'Agendar Servicio',
-                        style:
-                            TextStyle(
-                          fontSize:
-                              28,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                          height:
-                              30),
-                      field(
-                        petIdController,
-                        'ID Mascota',
-                      ),
-                      field(
-                        ownerIdController,
-                        'ID Cliente',
-                      ),
-                      field(
-                        groomerIdController,
-                        'ID Groomer',
-                      ),
-                      DropdownButtonFormField(
-                        value:
-                            selectedService,
-                        items: const [
-                          DropdownMenuItem(
-                            value:
-                                'Baño',
-                            child: Text(
-                                'Baño'),
-                          ),
-                          DropdownMenuItem(
-                            value:
-                                'Corte',
-                            child: Text(
-                                'Corte'),
-                          ),
-                          DropdownMenuItem(
-                            value:
-                                'Spa Premium',
-                            child: Text(
-                                'Spa Premium'),
-                          ),
-                        ],
-                        onChanged:
-                            (v) {
-                          setState(
-                              () {
-                            selectedService =
-                                v!;
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                          height:
-                              20),
-                      DropdownButtonFormField(
-                        value:
-                            duration,
-                        items: const [
-                          DropdownMenuItem(
-                            value:
-                                30,
-                            child: Text(
-                                '30 min'),
-                          ),
-                          DropdownMenuItem(
-                            value:
-                                60,
-                            child: Text(
-                                '60 min'),
-                          ),
-                          DropdownMenuItem(
-                            value:
-                                90,
-                            child: Text(
-                                '90 min'),
-                          ),
-                        ],
-                        onChanged:
-                            (v) {
-                          setState(
-                              () {
-                            duration =
-                                v!;
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                          height:
-                              30),
-                      ListTile(
-                        shape:
-                            RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(
-                                  12),
-                          side:
-                              const BorderSide(),
-                        ),
-                        title:
-                            Text(
-                          selectedDate
-                              .toString(),
-                        ),
-                        trailing:
-                            const Icon(
-                          Icons
-                              .access_time,
-                        ),
-                        onTap:
-                            pickDate,
-                      ),
-                      const SizedBox(
-                          height:
-                              30),
-                      BlocBuilder<
-                          AppointmentBloc,
-                          AppointmentState>(
-                        builder:
-                            (context,
-                                state) {
-                          if (state
-                              is AppointmentLoading) {
-                            return const CircularProgressIndicator();
-                          }
 
-                          return SizedBox(
-                            width:
-                                double.infinity,
-                            child:
-                                ElevatedButton(
-                              onPressed:
-                                  createAppointment,
-                              child:
-                                  const Text(
-                                'Crear Cita',
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    ],
-                  ),
+              const SizedBox(height: 20),
+
+              TextFormField(
+                initialValue: ownerId,
+                enabled: false,
+                decoration: const InputDecoration(labelText: 'Cliente'),
+              ),
+
+              const SizedBox(height: 20),
+
+              DropdownButtonFormField(
+                value: selectedGroomerId,
+                decoration: const InputDecoration(labelText: 'Groomer'),
+                items: groomers
+                    .map<DropdownMenuItem<String>>(
+                      (g) => DropdownMenuItem(
+                        value: g['id'],
+                        child: Text(g['nombre'] ?? 'Sin nombre'),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    selectedGroomerId = v;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              ElevatedButton.icon(
+                onPressed: pickDate,
+                icon: const Icon(Icons.calendar_month),
+                label: const Text('Escoger día'),
+              ),
+
+              const SizedBox(height: 15),
+
+              TextFormField(
+                enabled: false,
+                initialValue: DateFormat(
+                  'dd/MM/yyyy - HH:mm',
+                ).format(selectedDate),
+                decoration: const InputDecoration(
+                  labelText: 'Fecha y hora seleccionada',
+                  border: OutlineInputBorder(),
                 ),
               ),
-            ),
+
+              const SizedBox(height: 30),
+
+              ElevatedButton(
+                onPressed: createAppointment,
+                child: const Text('Crear Cita'),
+              ),
+            ],
           ),
         ),
       ),
