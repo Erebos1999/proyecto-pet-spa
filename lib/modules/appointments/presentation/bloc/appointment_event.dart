@@ -24,3 +24,20 @@ class LoadAppointmentsByDateEvent extends AppointmentEvent {
   @override
   List<Object?> get props => [date];
 }
+
+class LoadAvailableSlotsEvent extends AppointmentEvent {
+  final DateTime date;
+
+  final String groomerId;
+
+  final int durationMinutes;
+
+  const LoadAvailableSlotsEvent({
+    required this.date,
+    required this.groomerId,
+    required this.durationMinutes,
+  });
+
+  @override
+  List<Object> get props => [date, groomerId, durationMinutes];
+}

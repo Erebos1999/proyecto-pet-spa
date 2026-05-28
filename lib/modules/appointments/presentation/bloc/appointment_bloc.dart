@@ -1,29 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../data/datasource/appointment_firestore_datasource.dart';
 import '../../data/repositories/appointment_repository_impl.dart';
 import '../../domain/entities/appointment_entity.dart';
 
 part 'appointment_event.dart';
 part 'appointment_state.dart';
 
-class AppointmentBloc
-    extends Bloc<AppointmentEvent, AppointmentState> {
-  final repository =
-      AppointmentRepositoryImpl(
-    AppointmentFirestoreDatasource(),
-  );
+class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
+  final AppointmentRepositoryImpl repository;
 
-  AppointmentBloc()
-      : super(AppointmentInitial()) {
-    on<CreateAppointmentEvent>(
-      _createAppointment,
-    );
+  AppointmentBloc(this.repository) : super(AppointmentInitial()) {
+    on<CreateAppointmentEvent>(_createAppointment);
 
-    on<LoadAppointmentsByDateEvent>(
-      _loadAppointments,
-    );
+    on<LoadAppointmentsByDateEvent>(_loadAppointments);
+    on<LoadAvailableSlotsEvent>(_loadAvailableSlots);
   }
 
   Future<void> _createAppointment(
@@ -33,17 +24,11 @@ class AppointmentBloc
     try {
       emit(AppointmentLoading());
 
-      await repository.createAppointment(
-        event.appointment,
-      );
+      await repository.createAppointment(event.appointment);
 
       emit(AppointmentCreated());
     } catch (e) {
-      emit(
-        AppointmentError(
-          e.toString(),
-        ),
-      );
+      emit(AppointmentError(e.toString()));
     }
   }
 
@@ -54,20 +39,30 @@ class AppointmentBloc
     try {
       emit(AppointmentLoading());
 
-      final data =
-          await repository.getAppointmentsByDate(
-        event.date,
+      final data = await repository.getAppointmentsByDate(event.date);
+
+      emit(AppointmentLoaded(data));
+    } catch (e) {
+      emit(AppointmentError(e.toString()));
+    }
+  }
+
+  Future<void> _loadAvailableSlots(
+    LoadAvailableSlotsEvent event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    try {
+      emit(AppointmentLoading());
+
+      final slots = await repository.getAvailableSlots(
+        date: event.date,
+        groomerId: event.groomerId,
+        durationMinutes: event.durationMinutes,
       );
 
-      emit(
-        AppointmentLoaded(data),
-      );
+      emit(AvailableSlotsLoaded(slots));
     } catch (e) {
-      emit(
-        AppointmentError(
-          e.toString(),
-        ),
-      );
+      emit(AppointmentError(e.toString()));
     }
   }
 }

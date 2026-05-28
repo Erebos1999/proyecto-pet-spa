@@ -9,27 +9,73 @@ class PetRepositoryImpl
       datasource;
 
   PetRepositoryImpl(
-      this.datasource);
+    this.datasource,
+  );
 
   @override
   Future<void> createPet(
-      PetEntity pet) async {
+    PetEntity pet,
+  ) async {
+    final model = PetModel(
+      id: pet.id,
+      ownerId: pet.ownerId,
+      name: pet.name,
+      species: pet.species,
+      breed: pet.breed,
+      size: pet.size,
+      sex: pet.sex,
+      weight: pet.weight,
+      temperament:
+          pet.temperament,
+      vaccines: pet.vaccines,
+      allergies: pet.allergies,
+      observations:
+          pet.observations,
+      photoUrl: pet.photoUrl,
+      birthDate: pet.birthDate,
+      createdAt: pet.createdAt,
+    );
+
     await datasource.createPet(
-      PetModel(
-        id: pet.id,
-        ownerId: pet.ownerId,
-        name: pet.name,
-        breed: pet.breed,
-        size: pet.size,
-        birthDate:
-            pet.birthDate,
-        temperament:
-            pet.temperament,
-        photoUrl:
-            pet.photoUrl,
-        createdAt:
-            pet.createdAt,
-      ),
+      model,
+    );
+  }
+
+  @override
+  Future<void> updatePet(
+    PetEntity pet,
+  ) async {
+    final model = PetModel(
+      id: pet.id,
+      ownerId: pet.ownerId,
+      name: pet.name,
+      species: pet.species,
+      breed: pet.breed,
+      size: pet.size,
+      sex: pet.sex,
+      weight: pet.weight,
+      temperament:
+          pet.temperament,
+      vaccines: pet.vaccines,
+      allergies: pet.allergies,
+      observations:
+          pet.observations,
+      photoUrl: pet.photoUrl,
+      birthDate: pet.birthDate,
+      createdAt: pet.createdAt,
+    );
+
+    await datasource.updatePet(
+      model,
+    );
+  }
+
+  @override
+  Future<void> deletePet(
+    String id,
+  ) async {
+    await datasource.deletePet(
+      id,
     );
   }
 
@@ -40,6 +86,7 @@ class PetRepositoryImpl
   ) async {
     return await datasource
         .getPetsByOwner(
-            ownerId);
+      ownerId,
+    );
   }
 }

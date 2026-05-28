@@ -30,3 +30,16 @@ class LoadPetsEvent
   List<Object?> get props =>
       [ownerId];
 }
+class UpdatePetEvent
+    extends PetEvent {
+  final PetEntity pet;
+
+  const UpdatePetEvent(this.pet);
+}
+
+class DeletePetEvent
+    extends PetEvent {
+  final String id;
+
+  const DeletePetEvent(this.id);
+}

@@ -6,65 +6,77 @@ import '../config/router/app_router.dart';
 import '../modules/auth/data/datasource/auth_firestore_datasource.dart';
 import '../modules/auth/data/datasource/auth_remote_datasource.dart';
 import '../modules/auth/data/repositories/auth_repository_impl.dart';
+
 import '../modules/auth/presentation/bloc/auth_bloc.dart';
 
+import '../modules/pets/data/datasource/pet_firestore_datasource.dart';
+import '../modules/pets/data/repositories/pet_repository_impl.dart';
 import '../modules/pets/presentation/bloc/pet_bloc.dart';
+
+import '../modules/appointments/data/datasource/appointment_firestore_datasource.dart';
+import '../modules/appointments/data/repositories/appointment_repository_impl.dart';
 import '../modules/appointments/presentation/bloc/appointment_bloc.dart';
+
+import '../modules/services/data/datasource/service_firestore_datasource.dart';
+import '../modules/services/data/repositories/service_repository_impl.dart';
+import '../modules/services/presentation/bloc/service_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authRepository =
-        AuthRepositoryImpl(
+    final authRepository = AuthRepositoryImpl(
       AuthRemoteDataSource(),
       AuthFirestoreDatasource(),
+    );
+
+    final petRepository = PetRepositoryImpl(
+      PetFirestoreDatasource(),
+    );
+
+    final appointmentRepository =
+        AppointmentRepositoryImpl(
+      AppointmentFirestoreDatasource(),
+    );
+
+    final serviceRepository =
+        ServiceRepositoryImpl(
+      ServiceFirestoreDatasource(),
     );
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) =>
-              AuthBloc(
+          create: (_) => AuthBloc(
             authRepository,
           ),
         ),
 
         BlocProvider(
-          create: (_) =>
-              PetBloc(),
+          create: (_) => PetBloc(
+            petRepository,
+          ),
         ),
 
         BlocProvider(
-          create: (_) =>
-              AppointmentBloc(),
+          create: (_) => AppointmentBloc(
+            appointmentRepository,
+          ),
+        ),
+
+        BlocProvider(
+          create: (_) => ServiceBloc(
+            serviceRepository,
+          )..add(
+                LoadServicesEvent(),
+              ),
         ),
       ],
 
-      child:
-          MaterialApp.router(
-        debugShowCheckedModeBanner:
-            false,
-        routerConfig:
-            appRouter,
-
-        theme: ThemeData(
-          primaryColor:
-              const Color(
-            0xff66c7d8,
-          ),
-
-          colorScheme:
-              ColorScheme.fromSeed(
-            seedColor:
-                const Color(
-              0xff66c7d8,
-            ),
-          ),
-
-          useMaterial3: true,
-        ),
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: appRouter,
       ),
     );
   }

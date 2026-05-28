@@ -48,6 +48,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         automaticallyImplyLeading: true,
         title: const Text('Calendario'),
       ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff66c7d8),
         child: const Icon(Icons.add),
@@ -55,13 +56,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
           context.push('/create-appointment');
         },
       ),
+
       body: Column(
         children: [
           ListTile(
-            title: Text(selectedDate.toString().split(' ').first),
+            title: Text(DateFormat('dd/MM/yyyy').format(selectedDate)),
             trailing: const Icon(Icons.calendar_today),
             onTap: changeDate,
           ),
+
           Expanded(
             child: BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
@@ -79,18 +82,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     itemBuilder: (_, i) {
                       final a = state.appointments[i];
 
+                      final services = a.services
+                          .map((e) => e['name'])
+                          .join(', ');
+
                       return Card(
                         margin: const EdgeInsets.all(12),
+
                         child: ListTile(
                           leading: const Icon(
                             Icons.pets,
                             color: Color(0xff66c7d8),
                           ),
-                          title: Text(a.serviceName),
+
+                          title: Text(services),
+
                           subtitle: Text(
                             DateFormat('HH:mm').format(a.startTime),
                           ),
-                          trailing: Text(a.status),
+
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text(a.status), Text('Bs ${a.total}')],
+                          ),
                         ),
                       );
                     },

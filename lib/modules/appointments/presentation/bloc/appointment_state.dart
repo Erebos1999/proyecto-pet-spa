@@ -30,3 +30,12 @@ final class AppointmentError extends AppointmentState {
   @override
   List<Object?> get props => [message];
 }
+
+class AvailableSlotsLoaded extends AppointmentState {
+  final List<String> slots;
+
+  const AvailableSlotsLoaded(this.slots);
+
+  @override
+  List<Object> get props => [slots];
+}
