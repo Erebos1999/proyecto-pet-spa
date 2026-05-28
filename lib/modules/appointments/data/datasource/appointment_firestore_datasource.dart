@@ -67,4 +67,25 @@ class AppointmentFirestoreDatasource {
 
     return availableSlots;
   }
+
+  Future<List<AppointmentModel>> getAppointmentsByGroomer({
+    required String groomerId,
+    required DateTime date,
+  }) async {
+    final start = DateTime(date.year, date.month, date.day);
+
+    final end = start.add(const Duration(days: 1));
+
+    final snapshot = await firestore
+        .collection('appointments')
+        .where('groomerId', isEqualTo: groomerId)
+        .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('startTime', isLessThan: Timestamp.fromDate(end))
+        .orderBy('startTime')
+        .get();
+
+    return snapshot.docs
+        .map((e) => AppointmentModel.fromMap(e.id, e.data()))
+        .toList();
+  }
 }

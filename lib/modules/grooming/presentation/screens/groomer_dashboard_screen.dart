@@ -1,4 +1,5 @@
 import 'package:cerberus_pet_spa/modules/auth/presentation/bloc/auth_event.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,12 +12,17 @@ class GroomerDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    final userName =
+        user?.displayName ?? user?.email?.split('@').first ?? 'Groomer';
+
     return LogoutListener(
       child: Scaffold(
         backgroundColor: const Color(0xfff5f7fa),
 
         appBar: AppBar(
-          title: const Text('Mi Agenda Groomer'),
+          title: const Text('Panel Groomer'),
 
           actions: [
             IconButton(
@@ -38,72 +44,58 @@ class GroomerDashboardScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-                const Text(
-                  'Servicios de Hoy',
-                  style: TextStyle(
-                    fontSize: 28,
+                Text(
+                  'Bienvenido $userName',
+                  style: const TextStyle(
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
                 const Text(
-                  'Gestiona tus servicios y checklist',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  'Gestiona tus servicios, checklist y estado de grooming.',
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
 
                 const SizedBox(height: 30),
 
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  width: double.infinity,
+
+                  padding: const EdgeInsets.all(24),
 
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xff66c7d8),
-                        Color(0xff4ea9bb),
-                      ],
-                    ),
+                    borderRadius: BorderRadius.circular(28),
 
-                    borderRadius: BorderRadius.circular(25),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xff66c7d8), Color(0xff4ea9bb)],
+                    ),
                   ),
 
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.pets,
-                        color: Colors.white,
-                        size: 60,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: const [
+                      Icon(Icons.content_cut, size: 60, color: Colors.white),
+
+                      SizedBox(height: 20),
+
+                      Text(
+                        'Agenda Grooming',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
 
-                      const SizedBox(width: 20),
+                      SizedBox(height: 10),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              '8 citas programadas',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            SizedBox(height: 5),
-
-                            Text(
-                              '2 pendientes de finalizar',
-                              style: TextStyle(
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
+                      Text(
+                        'Visualiza tus citas del día y completa las fichas técnicas.',
+                        style: TextStyle(color: Colors.white70, fontSize: 16),
                       ),
                     ],
                   ),
@@ -112,37 +104,41 @@ class GroomerDashboardScreen extends StatelessWidget {
                 const SizedBox(height: 35),
 
                 const Text(
-                  'Agenda',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Módulos',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 20),
 
-                _appointmentCard(
-                  pet: 'Max',
-                  owner: 'Juan Pérez',
-                  service: 'Baño + Corte',
-                  hour: '10:00',
-                  status: 'En proceso',
+                _menuCard(
+                  title: 'Mi Agenda',
+                  subtitle: 'Visualiza únicamente tus servicios asignados',
+                  icon: Icons.calendar_month,
+                  buttonText: 'Abrir Agenda',
+                  onTap: () {
+                    context.push('/groomer-schedule');
+                  },
                 ),
 
-                _appointmentCard(
-                  pet: 'Luna',
-                  owner: 'Carla Flores',
-                  service: 'Baño Premium',
-                  hour: '11:30',
-                  status: 'Pendiente',
+                const SizedBox(height: 18),
+
+                _menuCard(
+                  title: 'Control de Insumos',
+                  subtitle:
+                      'Registra shampoos, perfumes y materiales utilizados',
+                  icon: Icons.inventory_2_outlined,
+                  buttonText: 'Gestionar Insumos',
+                  onTap: () {},
                 ),
 
-                _appointmentCard(
-                  pet: 'Rocky',
-                  owner: 'Luis Vargas',
-                  service: 'Corte Higiénico',
-                  hour: '14:00',
-                  status: 'Finalizado',
+                const SizedBox(height: 18),
+
+                _menuCard(
+                  title: 'Pagos',
+                  subtitle: 'Consulta pagos registrados y estado de cobros',
+                  icon: Icons.payments_outlined,
+                  buttonText: 'Ver Pagos',
+                  onTap: () {},
                 ),
               ],
             ),
@@ -152,21 +148,27 @@ class GroomerDashboardScreen extends StatelessWidget {
     );
   }
 
-  static Widget _appointmentCard({
-    required String pet,
-    required String owner,
-    required String service,
-    required String hour,
-    required String status,
+  static Widget _menuCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String buttonText,
+    required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
 
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
+
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
 
       child: Column(
@@ -175,66 +177,65 @@ class GroomerDashboardScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CircleAvatar(
-                backgroundColor: Color(0xff66c7d8),
-                child: Icon(
-                  Icons.pets,
-                  color: Colors.white,
+              Container(
+                padding: const EdgeInsets.all(14),
+
+                decoration: BoxDecoration(
+                  color: const Color(0xff66c7d8).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(18),
                 ),
+
+                child: Icon(icon, color: const Color(0xff66c7d8), size: 34),
               ),
 
-              const SizedBox(width: 15),
+              const SizedBox(width: 18),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     Text(
-                      pet,
+                      title,
                       style: const TextStyle(
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
                       ),
                     ),
 
-                    Text(owner),
+                    const SizedBox(height: 5),
+
+                    Text(
+                      subtitle,
+                      style: const TextStyle(color: Colors.grey, height: 1.4),
+                    ),
                   ],
                 ),
               ),
+            ],
+          ),
 
-              Text(
-                hour,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+          const SizedBox(height: 25),
+
+          SizedBox(
+            width: double.infinity,
+
+            child: ElevatedButton.icon(
+              onPressed: onTap,
+
+              icon: const Icon(Icons.arrow_forward),
+
+              label: Text(buttonText),
+
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff66c7d8),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Text(
-            service,
-            style: const TextStyle(
-              fontSize: 16,
             ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Row(
-            children: [
-              Chip(
-                label: Text(status),
-              ),
-
-              const Spacer(),
-
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Abrir ficha'),
-              ),
-            ],
           ),
         ],
       ),

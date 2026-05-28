@@ -90,4 +90,15 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       durationMinutes: durationMinutes,
     );
   }
+
+  @override
+  Future<List<AppointmentEntity>> getAppointmentsByGroomer({
+    required String groomerId,
+    required DateTime date,
+  }) async {
+    return datasource.getAppointmentsByGroomer(
+      groomerId: groomerId,
+      date: date,
+    );
+  }
 }

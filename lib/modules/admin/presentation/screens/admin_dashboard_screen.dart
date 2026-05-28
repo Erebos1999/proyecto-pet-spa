@@ -28,9 +28,7 @@ class AdminDashboardScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () {
-                context.read<AuthBloc>().add(
-                      LogoutEvent(),
-                    );
+                context.read<AuthBloc>().add(LogoutEvent());
 
                 context.go('/login');
               },
@@ -48,20 +46,14 @@ class AdminDashboardScreen extends StatelessWidget {
               children: [
                 const Text(
                   'Dashboard Administrativo',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 8),
 
                 const Text(
                   'Control general del Pet Spa',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
 
                 const SizedBox(height: 30),
@@ -116,10 +108,7 @@ class AdminDashboardScreen extends StatelessWidget {
 
                 const Text(
                   'Gestión',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 20),
@@ -158,6 +147,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       context,
                       title: 'Inventario',
                       icon: Icons.inventory_2,
+                      route: '/products',
                     ),
 
                     _menuCard(
@@ -198,10 +188,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       SizedBox(height: 20),
 
                       ListTile(
-                        leading: Icon(
-                          Icons.warning,
-                          color: Colors.orange,
-                        ),
+                        leading: Icon(Icons.warning, color: Colors.orange),
                         title: Text('Stock bajo en shampoo premium'),
                         subtitle: Text('Quedan 2 unidades'),
                       ),
@@ -242,30 +229,18 @@ class AdminDashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: const Color(0xff66c7d8),
-            size: 35,
-          ),
+          Icon(icon, color: const Color(0xff66c7d8), size: 35),
 
           const SizedBox(height: 20),
 
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 5),
 
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          Text(title, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -293,20 +268,13 @@ class AdminDashboardScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 45,
-              color: const Color(0xff66c7d8),
-            ),
+            Icon(icon, size: 45, color: const Color(0xff66c7d8)),
 
             const SizedBox(height: 20),
 
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ],
         ),

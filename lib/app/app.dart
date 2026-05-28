@@ -1,3 +1,6 @@
+import 'package:cerberus_pet_spa/modules/inventory/data/datasource/product_firestore_datasource.dart';
+import 'package:cerberus_pet_spa/modules/inventory/data/repositories/product_repository_impl.dart';
+import 'package:cerberus_pet_spa/modules/inventory/presentation/bloc/product_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,46 +34,31 @@ class App extends StatelessWidget {
       AuthFirestoreDatasource(),
     );
 
-    final petRepository = PetRepositoryImpl(
-      PetFirestoreDatasource(),
-    );
+    final petRepository = PetRepositoryImpl(PetFirestoreDatasource());
 
-    final appointmentRepository =
-        AppointmentRepositoryImpl(
+    final appointmentRepository = AppointmentRepositoryImpl(
       AppointmentFirestoreDatasource(),
     );
 
-    final serviceRepository =
-        ServiceRepositoryImpl(
+    final serviceRepository = ServiceRepositoryImpl(
       ServiceFirestoreDatasource(),
+    );
+    final productRepository = ProductRepositoryImpl(
+      ProductFirestoreDatasource(),
     );
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => AuthBloc(
-            authRepository,
-          ),
-        ),
+        BlocProvider(create: (_) => AuthBloc(authRepository)),
+
+        BlocProvider(create: (_) => PetBloc(petRepository)),
+
+        BlocProvider(create: (_) => AppointmentBloc(appointmentRepository)),
+        BlocProvider(create: (_) => ProductBloc()..add(LoadProductsEvent())),
 
         BlocProvider(
-          create: (_) => PetBloc(
-            petRepository,
-          ),
-        ),
-
-        BlocProvider(
-          create: (_) => AppointmentBloc(
-            appointmentRepository,
-          ),
-        ),
-
-        BlocProvider(
-          create: (_) => ServiceBloc(
-            serviceRepository,
-          )..add(
-                LoadServicesEvent(),
-              ),
+          create: (_) =>
+              ServiceBloc(serviceRepository)..add(LoadServicesEvent()),
         ),
       ],
 
