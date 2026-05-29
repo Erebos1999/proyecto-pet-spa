@@ -28,4 +28,31 @@ class ProductEntity {
     required this.active,
     required this.createdAt,
   });
+    ProductEntity copyWith({
+    String? id,
+    String? name,
+    String? description,
+    int? stock,
+    int? minimumStock,
+    double? purchasePrice,
+    double? salePrice,
+    bool? active,
+    DateTime? createdAt,
+  }) {
+    return ProductEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      stock: stock ?? this.stock,
+      minimumStock:
+          minimumStock ?? this.minimumStock,
+      purchasePrice:
+          purchasePrice ?? this.purchasePrice,
+      salePrice:
+          salePrice ?? this.salePrice,
+      active: active ?? this.active,
+      createdAt:
+          createdAt ?? this.createdAt,
+    );
+  }
 }

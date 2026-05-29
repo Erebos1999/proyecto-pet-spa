@@ -64,6 +64,8 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
 
         completedChecklist: appointment.completedChecklist,
 
+        usedProducts: appointment.usedProducts,
+
         paymentCompleted: appointment.paymentCompleted,
 
         paymentMethod: appointment.paymentMethod,
@@ -74,7 +76,9 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<List<AppointmentEntity>> getAppointmentsByDate(DateTime date) async {
+  Future<List<AppointmentEntity>> getAppointmentsByDate(
+    DateTime date,
+  ) async {
     return await datasource.getAppointmentsByDate(date);
   }
 

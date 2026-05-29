@@ -207,6 +207,7 @@ class _CreateAppointmentScreenState extends State<CreateAppointmentScreen> {
       notes: '',
 
       completedChecklist: [],
+      usedProducts: [],
 
       paymentCompleted: false,
 

@@ -22,6 +22,7 @@ class AppointmentModel extends AppointmentEntity {
     required super.paymentCompleted,
     required super.paymentMethod,
     required super.createdAt,
+    required super.usedProducts,
   });
 
   factory AppointmentModel.fromMap(String id, Map<String, dynamic> map) {
@@ -44,6 +45,7 @@ class AppointmentModel extends AppointmentEntity {
       paymentCompleted: map['paymentCompleted'] ?? false,
       paymentMethod: map['paymentMethod'] ?? '',
       createdAt: (map['createdAt'] as Timestamp).toDate(),
+      usedProducts: List<Map<String, dynamic>>.from(map['usedProducts'] ?? []),
     );
   }
 
@@ -66,6 +68,7 @@ class AppointmentModel extends AppointmentEntity {
       'paymentCompleted': paymentCompleted,
       'paymentMethod': paymentMethod,
       'createdAt': Timestamp.fromDate(createdAt),
+      'usedProducts': usedProducts,
     };
   }
 }

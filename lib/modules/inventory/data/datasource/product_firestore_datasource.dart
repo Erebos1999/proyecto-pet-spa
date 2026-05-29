@@ -21,13 +21,12 @@ class ProductFirestoreDatasource {
   }
 
   Future<List<ProductModel>> getProducts() async {
-    final snapshot = await firestore
-        .collection('products')
-        .orderBy('createdAt', descending: true)
-        .get();
+    final snapshot = await firestore.collection('products').get();
 
-    return snapshot.docs
-        .map((e) => ProductModel.fromMap(e.id, e.data()))
-        .toList();
+    return snapshot.docs.map((e) {
+      final data = e.data();
+
+      return ProductModel.fromMap(e.id, data);
+    }).toList();
   }
 }

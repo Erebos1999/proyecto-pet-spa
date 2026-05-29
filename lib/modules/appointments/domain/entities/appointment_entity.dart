@@ -25,6 +25,8 @@ class AppointmentEntity {
 
   final List<String> completedChecklist;
 
+  final List<Map<String, dynamic>> usedProducts;
+
   final bool paymentCompleted;
 
   final String paymentMethod;
@@ -47,6 +49,7 @@ class AppointmentEntity {
     required this.status,
     required this.notes,
     required this.completedChecklist,
+    required this.usedProducts,
     required this.paymentCompleted,
     required this.paymentMethod,
     required this.createdAt,
