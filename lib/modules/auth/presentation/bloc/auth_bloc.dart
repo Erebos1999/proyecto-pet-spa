@@ -65,7 +65,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           direccion: event.direccion,
         );
 
-        emit(AuthSuccess(user));
+        emit(RegisterSuccess('Valide su correo e inicie sesión'));
       } catch (e) {
         emit(AuthError(e.toString()));
       }

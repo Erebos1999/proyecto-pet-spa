@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"cerverus-pet-spa","appId":"1:276501101976:android:d8324cdd097bf1b3713fed","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"cerverus-pet-spa","configurations":{"android":"1:276501101976:android:d8324cdd097bf1b3713fed","ios":"1:276501101976:ios:6b697295b71cd027713fed","macos":"1:276501101976:ios:6b697295b71cd027713fed","web":"1:276501101976:web:0dbb6b10e648d80a713fed","windows":"1:276501101976:web:26fa99667bf0c759713fed"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "cerverus-pet-spa",
+          "appId": "1:276501101976:android:d8324cdd097bf1b3713fed",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "cerverus-pet-spa",
+          "configurations": {
+            "android": "1:276501101976:android:d8324cdd097bf1b3713fed",
+            "ios": "1:276501101976:ios:6b697295b71cd027713fed",
+            "macos": "1:276501101976:ios:6b697295b71cd027713fed",
+            "web": "1:276501101976:web:0dbb6b10e648d80a713fed",
+            "windows": "1:276501101976:web:26fa99667bf0c759713fed"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}
